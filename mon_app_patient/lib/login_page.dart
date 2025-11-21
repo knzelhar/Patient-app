@@ -14,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -68,55 +69,167 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
-                "Bienvenue",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Connectez-vous pour accéder à votre espace patient",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black54,
-                ),
+              // Logo et nom de l'application
+              Column(
+                children: [
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.medical_services,
+                      size: 40,
+                      color: Colors.blue.shade700,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "MediConnect",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Votre santé, notre priorité",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey.shade600,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 40),
+              
+              // Titre de connexion
+              Text(
+                "Connexion",
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Accédez à votre espace patient",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+              const SizedBox(height: 30),
+              
+              // Champ email
+              Text(
+                "Email",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700,
+                ),
+              ),
+              const SizedBox(height: 8),
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
-                  labelText: "Email",
+                  hintText: "votre@email.com",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
                   ),
-                  prefixIcon: const Icon(Icons.email),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: Colors.grey.shade600,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                 ),
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Mot de passe",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  prefixIcon: const Icon(Icons.lock),
+              
+              // Champ mot de passe
+              Text(
+                "Mot de passe",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700,
                 ),
               ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: passwordController,
+                obscureText: _obscurePassword,
+                decoration: InputDecoration(
+                  hintText: "Entrez votre mot de passe",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: Colors.grey.shade600,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey.shade600,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                ),
+              ),
+              const SizedBox(height: 10),
+              
+              
+            //   Align(
+            //     alignment: Alignment.centerRight,
+            //     child: TextButton(
+            //       onPressed: () {
+            //         // TODO: Implémenter la récupération de mot de passe
+            //         _showMessage("Fonctionnalité à venir");
+            //       },
+            //       child: Text(
+            //         "Mot de passe oublié ?",
+            //         style: TextStyle(
+            //           color: Colors.blue.shade600,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
               const SizedBox(height: 30),
+              
+              // Bouton de connexion
               ElevatedButton(
                 onPressed: isLoading ? null : handleLogin,
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  elevation: 2,
                 ),
                 child: isLoading
                     ? const SizedBox(
@@ -129,20 +242,58 @@ class _LoginPageState extends State<LoginPage> {
                       )
                     : const Text(
                         "Se connecter",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
               ),
               const SizedBox(height: 20),
-              TextButton(
+              
+              // Séparateur
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(color: Colors.grey.shade300),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "ou",
+                      style: TextStyle(
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(color: Colors.grey.shade300),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              
+              // Bouton d'inscription
+              OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const RegisterPage()),
                   );
                 },
-                child: const Text(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  side: BorderSide(color: Colors.blue.shade400),
+                ),
+                child: Text(
                   "Créer un compte",
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.blue.shade700,
+                  ),
                 ),
               ),
             ],
