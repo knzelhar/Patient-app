@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'appointment_service.dart';
 import 'history_service.dart';
 import 'notification_service.dart';
+import 'doctor_service.dart';
 class AuthService {
   // Configuration automatique selon la plateforme
   static String get baseUrl {
@@ -55,6 +56,7 @@ class AuthService {
           AppointmentService.setToken(token);
           HistoryService.setToken(token);
           NotificationService.setToken(token);
+          DoctorService.setToken(token);
           print('✅ Token sauvegardé: ${token.substring(0, 20)}...');
         } else {
           print('⚠️ Aucun token trouvé dans la réponse');
